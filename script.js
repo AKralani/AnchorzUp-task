@@ -34,8 +34,9 @@ function getShortLinks() {
             data.shortLinks.forEach(link => {
                 const li = document.createElement('li');
                 li.innerHTML = `<a href="${link.shortUrl}">${link.shortUrl}</a>
-                <button onclick="deleteShortUrl('${link.shortUrl}')">Delete</button>
-                `;
+                <span class="delete-icon" onclick="deleteShortUrl('${link.shortUrl}')">
+                <i class="fas fa-trash-alt"></i>
+                </span>`;
                 shortLinksList.appendChild(li);
             });
         })
