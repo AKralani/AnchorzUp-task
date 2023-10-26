@@ -33,13 +33,38 @@ function getShortLinks() {
 
             data.shortLinks.forEach(link => {
                 const li = document.createElement('li');
-                li.innerHTML = `<a href="${link.shortUrl}">${link.shortUrl}</a>`;
+                li.innerHTML = `<a href="${link.shortUrl}">${link.shortUrl}</a>
+                <button onclick="deleteShortUrl('${link.shortUrl}')">Delete</button>
+                `;
                 shortLinksList.appendChild(li);
             });
         })
         .catch(error => {
             console.error('Error:', error);
         });
+}
+
+function deleteShortUrl(shortUrl) {
+    fetch('shorten.php', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ short_url: shortUrl }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if (data.status === 'success') {
+            // alert(data.message);
+            return getShortLinks();  // Refresh the list
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 
 // Call getShortLinks on page load

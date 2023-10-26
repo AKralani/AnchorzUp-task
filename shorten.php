@@ -33,6 +33,22 @@ if (isset($_GET['getShortLinks'])) {
     exit();
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $shortUrlToDelete = str_replace('http://localhost/anchorzup/', '', $data['short_url']);
+    
+    $stmt = $mysqli->prepare("DELETE FROM short_urls WHERE short_url = ?");
+    $stmt->bind_param("s", $shortUrlToDelete);
+    
+    if ($stmt->execute()) {
+        echo json_encode(['status' => 'success', 'message' => 'Short URL deleted successfully']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Error: Unable to delete the short URL.']);
+    }
+    
+    $stmt->close();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
 
